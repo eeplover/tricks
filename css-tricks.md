@@ -17,7 +17,7 @@ input {
 ```
 
 * 清除浮动
-```css
+```less
 // less
 .clearfix {
   zoom: 1;
