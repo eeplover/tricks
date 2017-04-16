@@ -1,6 +1,7 @@
 /**
- * @title RequireJS 源码解读
- * @aim   理解RequireJs的主要原理
+ * @title RequireJS 源码阅读
+ * @aim   理解 RequireJs 的实现原理
+ * @desc  以下是 RequireJs 的主要代码，兼容性质的代码已经剥离
  * @tips  浏览器环境，不考虑兼容性，不处理异常，不考虑误操作
  */
 
