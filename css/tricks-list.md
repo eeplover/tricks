@@ -160,9 +160,13 @@ p {
 }
 ```
 
-* 控制元素在移动设备上是否使用滚动回弹效果
+* 控制元素在移动设备上是否使用滚动回弹效果  
+```less
+/* 当手指从触摸屏上移开，会保持一段时间的滚动 */
+-webkit-overflow-scrolling: touch;
+ /* 当手指从触摸屏上移开，滚动会立即停止 */
+-webkit-overflow-scrolling: auto;
 ```
--webkit-overflow-scrolling: touch; /* 当手指从触摸屏上移开，会保持一段时间的滚动 */
 
--webkit-overflow-scrolling: auto; /* 当手指从触摸屏上移开，滚动会立即停止 */
-```
+* flex  
+[flex box froggy](http://flexboxfroggy.com/)、[a guide to flexbox](https://css-tricks.com/snippets/css/a-guide-to-flexbox/)
