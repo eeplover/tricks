@@ -1,4 +1,4 @@
-## [操作字符串](string-operations.md)
+## [操作字符串](string-operations-triks.md)
 
 ## [Function Tricks](function-tricks.md)
 

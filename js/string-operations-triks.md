@@ -42,4 +42,4 @@
 
 <br>
 
-## [正则表达式](reg-exp.md)
+## [正则表达式](reg-exp-triks.md)
