@@ -1,0 +1,126 @@
+// mixins.less
+// Snippets of reusable CSS to develop faster and keep code readable
+// -----------------------------------------------------------------
+
+// 清除浮动
+.clearfix {
+    *zoom: 1;
+
+    &:after,
+    &:before {
+        display: table;
+        content: "";
+    }
+
+    &:after {
+        clear: both;
+    }
+}
+
+// input 框 placeholder 颜色设置
+.placeholder(@color:@placeholderText) {
+    // WebKit browsers
+    ::-webkit-input-placeholder {
+        color: @color;
+    }
+    // Mozilla Firefox 4 to 18
+    :-moz-placeholder {
+        color: @color;
+        opacity: 1;
+    }
+    // Mozilla Firefox 19+
+    ::-moz-placeholder {
+        color: @color;
+        opacity: 1;
+    }
+    // Internet Explorer 10+
+    :-ms-input-placeholder {
+        color: @color;
+    }
+}
+
+// 溢出显示 ...
+.ellipsis() {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.ellipsis--mul(@lineClamp:2) {
+    display: -webkit-box;
+    -webkit-line-clamp: @lineClamp;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+// CSS image replacement
+// Source: https://github.com/h5bp/html5-boilerplate/commit/aa0396eae757
+.hide-text {
+    font: 0/0 a;
+    color: transparent;
+    text-shadow: none;
+    background-color: transparent;
+    border: 0;
+}
+
+// 水平分割线
+.divider--h() {
+    // IE7 needs a set width since we gave a height. Restricting just
+    // to IE7 to keep the 1px left/right space in other browsers.
+    // It is unclear where IE is getting the extra space that we need
+    // to negative-margin away, but so it goes.
+    *width: 100%;
+    height: 1px;
+    margin: ((@baseLineHeight / 2) - 1) 1px; // 8px 1px
+    *margin: -5px 0 5px;
+    overflow: hidden;
+    background-color: #e5e5e5;
+    border-bottom: 1px solid @white;
+}
+
+// Popover arrows
+// -------------------------
+// For tipsies and popovers
+#popoverArrow {
+    .top(@arrowWidth:5px, @color: @black) {
+        bottom: 0;
+        left: 50%;
+        margin-left: -@arrowWidth;
+        border-left: @arrowWidth solid transparent;
+        border-right: @arrowWidth solid transparent;
+        border-top: @arrowWidth solid @color;
+    }
+
+    .left(@arrowWidth:5px, @color: @black) {
+        top: 50%;
+        right: 0;
+        margin-top: -@arrowWidth;
+        border-top: @arrowWidth solid transparent;
+        border-bottom: @arrowWidth solid transparent;
+        border-left: @arrowWidth solid @color;
+    }
+
+    .bottom(@arrowWidth:5px, @color: @black) {
+        top: 0;
+        left: 50%;
+        margin-left: -@arrowWidth;
+        border-left: @arrowWidth solid transparent;
+        border-right: @arrowWidth solid transparent;
+        border-bottom: @arrowWidth solid @color;
+    }
+
+    .right(@arrowWidth:5px, @color: @black) {
+        top: 50%;
+        left: 0;
+        margin-top: -@arrowWidth;
+        border-top: @arrowWidth solid transparent;
+        border-bottom: @arrowWidth solid transparent;
+        border-right: @arrowWidth solid @color;
+    }
+}
+
+// Opacity
+.opacity(@opacity) {
+  opacity: @opacity / 100;
+  filter: ~"alpha(opacity=@{opacity})";
+}

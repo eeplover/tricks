@@ -1,3 +1,8 @@
+# CSS Tricks
+
+> tricks 尽量不包含兼容性代码，把这部分工作留给工具。例如：fis3-postprocessor-autoprefixer
+
+
 * 移除input元素获取焦点时出现的轮廓
 ```css
 input {
@@ -20,15 +25,15 @@ input {
 ```less
 // less
 .clearfix {
-  zoom: 1;
-  &::after {
-    content: " ";
-    display: block;
-    visibility: hidden;
-    height: 0;
-    font-size: 0;
-    clear: both;
-  }
+    *zoom: 1;
+    &:after,
+    &:before {
+        display: table;
+        content: "";
+    }
+    &:after {
+        clear: both;
+    }
 }
 ```
 
@@ -38,7 +43,6 @@ input {
 // less
 // 单行
 .ellipsis() {
-  width: 100px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -46,7 +50,6 @@ input {
 
 // webkit浏览器下可实现多行溢出显示 ...
 .ellipsis-mul(@line: 2) {
-  width: 100px;
   display: -webkit-box;
   -webkit-line-clamp: @line;
   -webkit-box-orient: vertical;
@@ -87,7 +90,7 @@ a {
 * 移除表单控件的默认样式
 ```css
 input, button, textarea, select {
-    -webkit-appearance:none;
+    -webkit-appearance: none;
 }
 ```
 
@@ -124,9 +127,9 @@ div {
 img {
     filter: grayscale(100%); //灰度
     filter: blur(5px); //模糊
-    filter:brightness(200%); //高亮
-    filter:saturate(8); //饱和
-    filter:sepia(100%); //怀旧
+    filter: brightness(200%); //高亮
+    filter: saturate(8); //饱和
+    filter: sepia(100%); //怀旧
     ...
 }
 ```
@@ -159,6 +162,7 @@ p {
   display: flex; /* Chrome 29+, Firefox 22+, IE 11+, Opera 12.1/17/18, Android 4.4+ */
 }
 ```
+> 可以通过 autoprefixer 工具自动添加兼容性前缀。
 
 * 控制元素在移动设备上是否使用滚动回弹效果  
 ```less
