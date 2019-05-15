@@ -2,7 +2,7 @@
  * @file   merge.js 合并对象
  * @author eeplover@gmail.com
  */
-import {isPlain, each} from './utils/obj'
+import {isPlain, each} from './utils/obj';
 
 
 /**

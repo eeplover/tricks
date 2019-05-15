@@ -52,7 +52,7 @@ export function each(object, fn) {
  * @return {Mixed}
  */
 export function reduce(object, fn, initial = 0) {
-    return keys(object).reduce((accum, key) => fn(accum, object[key], key)), initial);
+    return keys(object).reduce((accum, key) => fn(accum, object[key], key), initial);
 }
 
 /**

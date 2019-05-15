@@ -14,64 +14,64 @@ var require, define
         hasOwn = op.hasOwnProperty,
 
         globalDefQueue = [],
-        cjsRequireRegExp = /[^.]\s*require\s*\(\s*["']([^'"\s]+)["']\s*\)/g
+        cjsRequireRegExp = /[^.]\s*require\s*\(\s*["']([^'"\s]+)["']\s*\)/g;
 
     // 模块定义
     define = function (name, deps, callback) {
-        var node
+        var node;
 
         //Allow for anonymous modules
         if (typeof name !== 'string') {
             //Adjust args appropriately
-            callback = deps
-            deps = name
-            name = null
+            callback = deps;
+            deps = name;
+            name = null;
         }
 
         //This module may not have dependencies
         if (!isArray(deps)) {
-            callback = deps
-            deps = null
+            callback = deps;
+            deps = null;
         }
 
         //If no name, and callback is a function, then figure out if it a
         //CommonJS thing with dependencies.
         if (!deps && isFunction(callback)) {
-            deps = []
+            deps = [];
             //Remove comments from the callback string,
             //look for require calls, and pull them into the dependencies,
             //but only if there are function args.
             if (callback.length) {
-                deps.push('require')
+                deps.push('require');
                 callback
                     .toString()
                     .replace(cjsRequireRegExp, function (match, dep) {
-                        deps.push(dep)
-                    })
+                        deps.push(dep);
+                    });
             }
         }
 
-        globalDefQueue.push([name, deps, callback])
-    }
+        globalDefQueue.push([name, deps, callback]);
+    };
 
     function isArray(it) {
-        return ostring.call(it) === '[object Array]'
+        return ostring.call(it) === '[object Array]';
     }
 
     function isFunction(it) {
-        return ostring.call(it) === '[object Function]'
+        return ostring.call(it) === '[object Function]';
     }
 
     function bind(obj, fn) {
         return function () {
-            fn.apply(obj, arguments)
-        }
+            fn.apply(obj, arguments);
+        };
     }
 
     function each(ary, func) {
         if (ary) {
             for (var i = 0; i < ary.length; i++) {
-                if (ary[i] && func(ary[i], i, ary)) break
+                if (ary[i] && func(ary[i], i, ary)) break;
             }
         }
     }
@@ -89,28 +89,28 @@ var require, define
 
     // 入口函数
     require = function (deps, callback) {
-        var context, contextName = '_'
+        var context, contextName = '_';
 
-        context = getOwn(contexts, contextName)
+        context = getOwn(contexts, contextName);
 
         if (!context) {
-            context = contexts[contextName] = require.s.newContext(contextName)
+            context = contexts[contextName] = require.s.newContext(contextName);
         }
 
-        return context.require(deps, callback)
-    }
+        return context.require(deps, callback);
+    };
 
     function getOwn(obj, prop) {
-        return hasProp(obj, prop) && obj[prop]
+        return hasProp(obj, prop) && obj[prop];
     }
 
     function hasProp(obj, prop) {
-        return hasOwn.call(obj, prop)
+        return hasOwn.call(obj, prop);
     }
 
     require.s = {
         newContext: newContext
-    }
+    };
 
     // 创建执行上下文对象
     function newContext(contextName) {
@@ -133,50 +133,50 @@ var require, define
             undefEvents = {},
             // 放置enabled=true的Module对象
             enabledRegistry = {},
-            requireCounter = 1
+            requireCounter = 1;
 
         function checkLoaded() {
             var waitInterval = 7000,
                 expired = waitInterval && (context.startTime + waitInterval) < new Date().getTime(),
-                stillLoading = false
+                stillLoading = false;
 
             //Do not bother if this call was a result of a cycle break.
             if (inCheckLoaded) {
-                return
+                return;
             }
 
-            inCheckLoaded = true
+            inCheckLoaded = true;
 
             //Figure out the state of all the modules.
             eachProp(enabledRegistry, function (mod) {
                 var map = mod.map,
-                    modId = map.id
+                    modId = map.id;
 
                 //Skip things that are not enabled or in error state.
                 if (!mod.enabled) {
-                    return
+                    return;
                 }
 
                 if (!mod.error) {
-                    stillLoading = true
+                    stillLoading = true;
                 }
-            })
+            });
 
             if (expired) {
-                console.error('Load timeout for modules: ', modId)
-                return
+                console.error('Load timeout for modules: ', modId);
+                return;
             }
 
             if (!expired && stillLoading) {
                 if (!checkLoadedTimeoutId) {
                     checkLoadedTimeoutId = setTimeout(function () {
-                        checkLoadedTimeoutId = 0
-                        checkLoaded()
-                    }, 50)
+                        checkLoadedTimeoutId = 0;
+                        checkLoaded();
+                    }, 50);
                 }
             }
 
-            inCheckLoaded = false
+            inCheckLoaded = false;
         }
 
         handlers = {
@@ -187,192 +187,192 @@ var require, define
                     return (mod.require = context.makeRequire(mod.map));
                 }
             }
-        }
+        };
 
         function on(depMap, name, fn) {
             var id = depMap.id,
-                mod = getOwn(registry, id)
+                mod = getOwn(registry, id);
 
             if (hasProp(defined, id) &&
                     (!mod || mod.defineEmitComplete)) {
                 if (name === 'defined') {
-                    fn(defined[id])
+                    fn(defined[id]);
                 }
             } else {
-                mod = getModule(depMap)
+                mod = getModule(depMap);
                 if (mod.error && name === 'error') {
-                    fn(mod.error)
+                    fn(mod.error);
                 } else {
-                    mod.on(name, fn)
+                    mod.on(name, fn);
                 }
             }
         }
 
         function cleanRegistry(id) {
-            delete registry[id]
-            delete enabledRegistry[id]
+            delete registry[id];
+            delete enabledRegistry[id];
         }
 
         function makeModuleMap(name) {
             var url,
-                isDefine = true
+                isDefine = true;
 
             if (!name) {
-                isDefine = false
-                name = '_@r' + (requireCounter += 1)
+                isDefine = false;
+                name = '_@r' + (requireCounter += 1);
             }
 
-            url = context.nameToUrl(name)
+            url = context.nameToUrl(name);
 
             return {
                 id: name,
                 name: name,
                 url: url
-            }
+            };
         }
 
         function getModule(depMap) {
             var id = depMap.id,
-                mod = getOwn(registry, id)
+                mod = getOwn(registry, id);
             if (!mod) {
-                mod = registry[id] = new context.Module(depMap)
+                mod = registry[id] = new context.Module(depMap);
             }
 
-            return mod
+            return mod;
         }
 
         Module = function (map) {
-            this.map = map
-            this.exports = {}
-            this.depCount = 0
-            this.depExports = []
-            this.depMatched = []
-            this.events = getOwn(undefEvents, map.id) || {}
-        }
+            this.map = map;
+            this.exports = {};
+            this.depCount = 0;
+            this.depExports = [];
+            this.depMatched = [];
+            this.events = getOwn(undefEvents, map.id) || {};
+        };
 
         Module.prototype = {
             // 设置Module的依赖及回调
             init: function (depMaps, factory, options = {}) {
-                if (this.inited) return
+                if (this.inited) return;
 
-                this.factory = factory
-                this.depMaps = depMaps
-                this.inited = true
+                this.factory = factory;
+                this.depMaps = depMaps;
+                this.inited = true;
 
                 if (options.enabled || this.enabled) {
-                    this.enable()
+                    this.enable();
                 } else {
-                    this.check()
+                    this.check();
                 }
             },
 
             // 加载当前模块以及它的依赖模块
             enable: function () {
-                enabledRegistry[this.map.id] = this
-                this.enabled = true
+                enabledRegistry[this.map.id] = this;
+                this.enabled = true;
 
                 //Set flag mentioning that the module is enabling,
                 //so that immediate calls to the defined callbacks
                 //for dependencies do not trigger inadvertent load
                 //with the depCount still being zero.
-                this.enabling = true
+                this.enabling = true;
 
                 //Enable each dependency
                 each(this.depMaps, bind(this, function (depMap, i) {
-                    var id, mod, handler
+                    var id, mod, handler;
 
                     if (typeof depMap === 'string') {
                         //Dependency needs to be converted to a depMap
                         //and wired up to this module.
-                        depMap = makeModuleMap(depMap)
-                        this.depMaps[i] = depMap
+                        depMap = makeModuleMap(depMap);
+                        this.depMaps[i] = depMap;
 
-                        handler = getOwn(handlers, depMap.id)
+                        handler = getOwn(handlers, depMap.id);
 
                         if (handler) {
-                            this.depExports[i] = handler(this)
-                            return
+                            this.depExports[i] = handler(this);
+                            return;
                         }
 
-                        this.depCount += 1
+                        this.depCount += 1;
 
                         on(depMap, 'defined', bind(this, function (depExports) {
                             if (this.undefed) {
-                                return
+                                return;
                             }
-                            this.defineDep(i, depExports)
-                            this.check()
-                        }))
+                            this.defineDep(i, depExports);
+                            this.check();
+                        }));
                     }
 
-                    id = depMap.id
-                    mod = registry[id]
+                    id = depMap.id;
+                    mod = registry[id];
 
                     //Skip special modules like 'require', 'exports', 'module'
                     //Also, don't call enable if it is already enabled,
                     //important in circular dependency cases.
                     if (!hasProp(handlers, id) && mod && !mod.enabled) {
-                        context.enable(depMap, this)
+                        context.enable(depMap, this);
                     }
-                }))
+                }));
 
-                this.enabling = false
+                this.enabling = false;
 
-                this.check()
+                this.check();
             },
 
             // 检查当前Module的状态，1. 是否加载；2. 检查depCount值，若为0，返回exports，并触发自身的defined事件。
             check: function () {
                 if (!this.enabled || this.enabling) {
-                    return
+                    return;
                 }
 
                 var id = this.map.id,
                     depExports = this.depExports,
                     exports = this.exports,
-                    factory = this.factory
+                    factory = this.factory;
 
                 if (!this.inited) {
                     // Only fetch if not already in the defQueue.
                     if (!hasProp(context.defQueueMap, id)) {
-                        this.fetch()
+                        this.fetch();
                     }
                 } else if (!this.defining) {
                     //The factory could trigger another require call
                     //that would result in checking this module to
                     //define itself again. If already in the process
                     //of doing that, skip this work.
-                    this.defining = true
+                    this.defining = true;
 
                     if (this.depCount < 1 && !this.defined) {
                         if (isFunction(factory)) {
-                            exports = context.execCb(id, factory, depExports, exports)
+                            exports = context.execCb(id, factory, depExports, exports);
                         } else {
                             //Just a literal value
-                            exports = factory
+                            exports = factory;
                         }
 
-                        this.exports = exports
+                        this.exports = exports;
 
                         if (this.map.isDefine && !this.ignore) {
-                            defined[id] = exports
+                            defined[id] = exports;
                         }
 
                         //Clean up
-                        cleanRegistry(id)
+                        cleanRegistry(id);
 
-                        this.defined = true
+                        this.defined = true;
                     }
 
                     //Finished the define stage. Allow calling check again
                     //to allow define notifications below in the case of a
                     //cycle.
-                    this.defining = false
+                    this.defining = false;
 
                     if (this.defined && !this.defineEmitted) {
-                        this.defineEmitted = true
-                        this.emit('defined', this.exports)
-                        this.defineEmitComplete = true
+                        this.defineEmitted = true;
+                        this.emit('defined', this.exports);
+                        this.defineEmitComplete = true;
                     }
 
                 }
@@ -380,19 +380,19 @@ var require, define
 
             fetch: function () {
                 if (this.fetched) {
-                    return
+                    return;
                 }
-                this.fetched = true
+                this.fetched = true;
 
-                this.load()
+                this.load();
             },
 
             load: function () {
-                var url = this.map.url
+                var url = this.map.url;
 
                 if (!urlFetched[url]) {
-                    urlFetched[url] = true
-                    context.load(this.map.id, url)
+                    urlFetched[url] = true;
+                    context.load(this.map.id, url);
                 }
             },
 
@@ -406,13 +406,13 @@ var require, define
 
             emit: function (name, evt) {
                 each(this.events[name], function (cb) {
-                    cb(evt)
-                })
+                    cb(evt);
+                });
                 if (name === 'error') {
                     //Now that the error handler was triggered, remove
                     //the listeners, since this broken Module instance
                     //can stay around for a while in the registry.
-                    delete this.events[name]
+                    delete this.events[name];
                 }
             },
 
@@ -420,43 +420,43 @@ var require, define
                 //Because of cycles, defined callback for a given
                 //export can be called more than once.
                 if (!this.depMatched[i]) {
-                    this.depMatched[i] = true
-                    this.depCount -= 1
-                    this.depExports[i] = depExports
+                    this.depMatched[i] = true;
+                    this.depCount -= 1;
+                    this.depExports[i] = depExports;
                 }
             },
-        }
+        };
 
         function callGetModule(args) {
             if (!hasProp(defined, args[0])) {
-                getModule(makeModuleMap(args[0], null, true)).init(args[1], args[2])
+                getModule(makeModuleMap(args[0], null, true)).init(args[1], args[2]);
             }
         }
 
         function intakeDefines() {
-            var args
-            takeGlobalQueue()
+            var args;
+            takeGlobalQueue();
             while (defQueue.length) {
-                var args = defQueue.shift()
+                var args = defQueue.shift();
                 if (args[0] == null) {
                     // @TODO error catch
                 } else {
-                    callGetModule(args)
+                    callGetModule(args);
                 }
             }
-            context.defQueueMap = {}
+            context.defQueueMap = {};
         }
 
         function takeGlobalQueue() {
             if (globalDefQueue.length) {
                 each(globalDefQueue, function (queueItem) {
-                    var id = queueItem[0]
+                    var id = queueItem[0];
                     if (typeof id === 'string') {
-                        context.defQueueMap[id] = true
+                        context.defQueueMap[id] = true;
                     }
-                    defQueue.push(queueItem)
-                })
-                globalDefQueue = []
+                    defQueue.push(queueItem);
+                });
+                globalDefQueue = [];
             }
         }
 
@@ -467,89 +467,89 @@ var require, define
 
             require: function (deps, callback) {
                 this.nextTick(function () {
-                    intakeDefines()
-                    requireMod = getModule(makeModuleMap())
-                    requireMod.init(deps, callback, { enabled: true })
-                })
+                    intakeDefines();
+                    requireMod = getModule(makeModuleMap());
+                    requireMod.init(deps, callback, { enabled: true });
+                });
             },
 
             enable: function (depMap) {
-                var mod = getOwn(registry, depMap.id)
+                var mod = getOwn(registry, depMap.id);
                 if (mod) {
-                    getModule(depMap).enable()
+                    getModule(depMap).enable();
                 }
             },
 
             nameToUrl: function (moduleName) {
-                return config.baseUrl + moduleName + '.js'
+                return config.baseUrl + moduleName + '.js';
             },
 
             load: function (id, url) {
-                require.load(context, id, url)
+                require.load(context, id, url);
             },
 
             onScriptLoad: function (evt) {
-                var node = evt.currentTarget || evt.srcElement
+                var node = evt.currentTarget || evt.srcElement;
 
-                node.removeEventListener('load', context.onScriptLoad)
-                context.completeLoad(node && node.getAttribute('data-requiremodule'))
+                node.removeEventListener('load', context.onScriptLoad);
+                context.completeLoad(node && node.getAttribute('data-requiremodule'));
             },
 
             completeLoad: function (moduleName) {
-                var found, args, mod
+                var found, args, mod;
 
-                takeGlobalQueue()
+                takeGlobalQueue();
 
                 while (defQueue.length) {
-                    args = defQueue.shift()
+                    args = defQueue.shift();
                     if (args[0] === null) {
-                        args[0] = moduleName
+                        args[0] = moduleName;
                         if (found) {
-                            break
+                            break;
                         }
-                        found = true
+                        found = true;
                     } else if (args[0] === moduleName) {
-                        found = true
+                        found = true;
                     }
 
-                    callGetModule(args)
+                    callGetModule(args);
                 }
-                context.defQueueMap = {}
-                checkLoaded()
+                context.defQueueMap = {};
+                checkLoaded();
             },
 
             execCb: function (name, callback, args, exports) {
-                return callback.apply(exports, args)
+                return callback.apply(exports, args);
             }
-        }
+        };
 
-        return context
+        return context;
     }
 
     require.nextTick = function (fn) {
-        typeof setTimeout !== 'undefined' ? setTimeout(fn, 4) : fn()
-    }
+        typeof setTimeout !== 'undefined' ? setTimeout(fn, 4) : fn();
+    };
 
     // 执行依赖模块的加载
     require.load = function (context, moduleName, url) {
-        var head = document.getElementsByTagName('head')[0]
-        var node = document.createElement('script')
+        var head = document.getElementsByTagName('head')[0];
+        var node = document.createElement('script');
 
-        node.setAttribute('data-requiremodule', moduleName)
-        node.setAttribute('data-requirecontext', context.contextName)
-        node.addEventListener('load', context.onScriptLoad, false)
+        node.setAttribute('data-requiremodule', moduleName);
+        node.setAttribute('data-requirecontext', context.contextName);
+        node.addEventListener('load', context.onScriptLoad, false);
 
-        node.type = 'text/javascript'
-        node.charset = 'utf-8'
-        node.async = true
-        node.src = url
+        node.type = 'text/javascript';
+        node.charset = 'utf-8';
+        node.async = true;
+        node.src = url;
 
-        head.appendChild(node)
+        head.appendChild(node);
 
-        return node
-    }
+        return node;
+    };
 
     // 创建默认执行上下文
-    require({})
+    require({});
 
-})(this)
+})(this);

@@ -3,7 +3,7 @@
  * @author eeplover@gmail.com
  */
 
-import {isPlain, isObject, hasOwnProperty, keys} from './utils/obj';
+import {isPlain, isObject, hasOwnProperty, each} from './utils/obj';
 import cache from './utils/cache';
 import {throwErr} from './utils/err';
 
@@ -13,7 +13,7 @@ import {throwErr} from './utils/err';
  * @param    {Object} object
  * @return   {Object}
  */
-function cloneByJson(object) {
+export function cloneByJson(object) {
     if (!isPlain(object)) {
         throwErr('参数错误');
     }
@@ -26,7 +26,7 @@ function cloneByJson(object) {
  * @param  {Object} object
  * @return {Object}
  */
-function cloneByRecursion(object, ) {
+export function cloneByRecursion(object, ) {
     if (!isPlain(object)) {
         throwErr('参数错误');
     }
@@ -62,7 +62,7 @@ function cloneByRecursion(object, ) {
  * @param  {Object} object
  * @return {Object}
  */
-function cloneByTraversal(object) {
+export function cloneByTraversal(object) {
     if (!isPlain(object)) {
         throwErr('参数错误');
     }

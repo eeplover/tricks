@@ -1,0 +1,50 @@
+{
+  "name": "tricks",
+  "version": "1.0.0",
+  "description": "collect some js&css tricks",
+  "main": "src/js/index.js",
+  "directories": {
+    "doc": "doc",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha",
+    "build": "npm-run-all -p build:*",
+    "build:rollup": "rollup -c scripts/rollup.config.js",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "src/**/*.js": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eplover/tricks.git"
+  },
+  "keywords": [
+    "js",
+    "tricks",
+    "css",
+    "tricks"
+  ],
+  "author": "eeplover@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/eplover/tricks/issues"
+  },
+  "homepage": "https://github.com/eplover/tricks#readme",
+  "devDependencies": {
+    "@babel/core": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
+    "eslint": "^5.16.0",
+    "husky": "^2.2.0",
+    "lint-staged": "^8.1.6",
+    "mocha": "^6.1.4",
+    "npm-run-all": "^4.1.5",
+    "rollup": "^1.11.3",
+    "rollup-plugin-babel": "^4.3.2",
+    "rollup-plugin-node-resolve": "^4.2.4"
+  }
+}

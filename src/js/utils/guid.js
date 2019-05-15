@@ -3,8 +3,8 @@
  * @author eeplover@gmail.com
  */
 
-let _uid = 1;
+let _guid = 1;
 
 export function guid(prefix = '') {
-    return prefix + _uid++;
+    return prefix + _guid++;
 }

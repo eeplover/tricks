@@ -3,8 +3,8 @@
  * @author eeplover@gmail.com
  */
 import {each, hasOwnproperty} from './obj';
-export default const cache = {
-    count： 0,
+const cache = {
+    count: 0,
     db: {},
     store(value) {
         const key = 'chacheKey' + this.count;
@@ -30,3 +30,4 @@ export default const cache = {
         each(this.db, cbk);
     }
 };
+export default cache;
